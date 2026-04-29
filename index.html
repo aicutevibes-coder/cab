@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartCab Finder</title>
 
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+padding:25px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+header{
+text-align:center;
+margin-bottom:25px;
+}
+
+header h1{
+font-size:42px;
+color:#38bdf8;
+}
+
+header p{
+color:#cbd5e1;
+margin-top:10px;
+}
+
+.card{
+background:#111827;
+padding:25px;
+border-radius:18px;
+margin-bottom:22px;
+box-shadow:0 10px 20px rgba(0,0,0,.25);
+}
+
+h2{
+color:#22c55e;
+margin-bottom:15px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+margin-top:10px;
+outline:none;
+}
+
+button{
+padding:12px 18px;
+border:none;
+border-radius:10px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+margin:6px;
+}
+
+.blue{background:#38bdf8;color:#000;}
+.green{background:#22c55e;color:#fff;}
+.red{background:#ef4444;color:#fff;}
+.yellow{background:#facc15;color:#000;}
+
+.result{
+font-size:18px;
+line-height:2;
+margin-top:12px;
+}
+
+.map{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+margin-top:12px;
+}
+
+.big{
+font-size:22px;
+font-weight:bold;
+}
+
+footer{
+text-align:center;
+color:#94a3b8;
+padding:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>SmartCab Finder</h1>
+<p>Find Office Cab Easily with Ring Alert</p>
+</header>
+
+<div class="card">
+<h2>Search Your Cab</h2>
+
+<select id="cabSelect">
+<option value="">Select Cab</option>
+<option value="CAB101|Ravi Kumar|Gate A|35">CAB101 - Ravi Kumar</option>
+<option value="CAB202|Suresh|Gate B|60">CAB202 - Suresh</option>
+<option value="CAB303|Mahesh|Parking Zone|15">CAB303 - Mahesh</option>
+</select>
+
+<button class="blue" onclick="findCab()">Find My Cab</button>
+<button class="yellow" onclick="ringCab()">Ring Cab</button>
+<button class="green" onclick="voiceGuide()">Voice Guide</button>
+
+<div class="result" id="result">
+Choose your cab first.
+</div>
+
+</div>
+
+<div class="card">
+<h2>Cab Location</h2>
+<div class="map" id="mapBox">
+Waiting for cab selection...
+</div>
+</div>
+
+<div class="card">
+<h2>Accessibility Support</h2>
+<div class="result">
+• Voice directions for visually impaired<br>
+• Bell alert to locate cab<br>
+• Large text display<br>
+• Easy one-tap buttons
+</div>
+</div>
+
+<footer>
+SmartCab Finder Demo Project
+</footer>
+
+</div>
+
+<script>
+
+let currentCab = "";
+
+function findCab(){
+
+let data = document.getElementById("cabSelect").value;
+
+if(data==""){
+document.getElementById("result").innerHTML =
+"Please select your cab.";
+return;
+}
+
+let arr = data.split("|");
+
+let cab = arr[0];
+let driver = arr[1];
+let location = arr[2];
+let distance = arr[3];
+
+currentCab = cab;
+
+document.getElementById("result").innerHTML =
+
+"<span class='big'>Cab Found</span><br>" +
+"Cab Number: "+cab+"<br>" +
+"Driver: "+driver+"<br>" +
+"Pickup Point: "+location+"<br>" +
+"Distance: "+distance+" meters";
+
+document.getElementById("mapBox").innerHTML =
+
+"📍 "+cab+" is near <b>"+location+"</b><br><br>" +
+"Estimated walking time: "+Math.ceil(distance/20)+" minute(s).";
+
+}
+
+function ringCab(){
+
+if(currentCab==""){
+alert("Select cab first.");
+return;
+}
+
+alert("Bell sent to " + currentCab + ". Driver notified.");
+
+document.getElementById("mapBox").innerHTML +=
+"<br><br>🔔 Bell activated. Look for blinking cab.";
+
+}
+
+function voiceGuide(){
+
+let text = document.getElementById("result").innerText;
+
+if(text.includes("Cab Found")){
+
+let speech = new SpeechSynthesisUtterance(
+"Your cab is nearby. Please walk towards the pickup point. Bell has been activated."
+);
+
+speech.lang = "en-US";
+speech.rate = 1;
+
+speechSynthesis.speak(speech);
+
+}else{
+alert("Find cab first.");
+}
+
+}
+
+</script>
+
+</body>
+</html>
